@@ -360,7 +360,7 @@ def generate_bill(request, order_id):
 def scan_menu(request):
     menu_items = MenuItem.objects.filter(available=True)
     table_number = request.GET.get('table_id')
-    table = Table.objects.get(id=table_number)
+    table = Table.objects.get(table_number = table_number)
     return render(request, 'scan_menu.html', {'menu_items': menu_items, 'table': table})
 
 from .models import Table, UnregisteredOrder
