@@ -372,7 +372,7 @@ def place_order_unregistered(request, item_id, table_id):
     table = get_object_or_404(Table, id=table_number)
     if table.is_booked:
         messages.error(request, "This table is currently booked. You cannot place an order.")
-        return redirect('scan_menu')  # Redirect to scan-menu page
+        return redirect(f"/scan-menu/?table_id={table_number}")  # Redirect to scan-menu page
 
     if request.method == 'POST':
         customer_name = request.POST['customer_name']
