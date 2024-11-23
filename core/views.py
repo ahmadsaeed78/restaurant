@@ -360,7 +360,7 @@ def generate_bill(request, order_id):
 def scan_menu(request):
     menu_items = MenuItem.objects.filter(available=True)
     table_number = request.GET.get('table_id')
-    table = Table.objects.get(table_number = table_number)
+    table = get_object_or_404(Table, id=table_number)
     return render(request, 'scan_menu.html', {'menu_items': menu_items, 'table': table})
 
 from .models import Table, UnregisteredOrder
@@ -369,6 +369,10 @@ def place_order_unregistered(request, item_id, table_id):
     item = get_object_or_404(MenuItem, id=item_id)
     tables = Table.objects.filter(is_booked = False)
     table_number = table_id
+    table = get_object_or_404(Table, id=table_number)
+    if table.is_booked:
+        messages.error(request, "This table is currently booked. You cannot place an order.")
+        return redirect('scan_menu')  # Redirect to scan-menu page
 
     if request.method == 'POST':
         customer_name = request.POST['customer_name']
@@ -417,7 +421,7 @@ def manage_tables_chief(request):
 
 def generate_table_qr(request, table_id):
     table = Table.objects.get(id=table_id)
-    url = request.build_absolute_uri(reverse('scan_menu') + f"?table_number={table.table_number}")
+    url = request.build_absolute_uri(reverse('scan_menu') + f"?table_id={table.table_number}")
     
     # Generate QR code
     qr = qrcode.QRCode(
