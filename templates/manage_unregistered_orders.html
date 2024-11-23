@@ -91,6 +91,13 @@
     </style>
 </head>
 <body>
+    {% if messages %}
+    <div class="message {% for message in messages %}{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% endif %}{% endfor %}">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
     <h1>Manage Unregistered Orders</h1>
     <table>
         <thead>
